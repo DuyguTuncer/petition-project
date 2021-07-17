@@ -30,11 +30,15 @@ app.get("/", (req, res) => {
 // });
 
 app.post("/", (req, res) => {
+    console.log(req.body);
     console.log(req.body.first);
     console.log(req.body.last);
-    db.addInfo(req.body.first, req.body.last).then(() => {
-        res.redirect("/thanks");
-    });
+    console.log(req.body.canvas);
+    db.addInfo(req.body.first, req.body.last, req.body.canvas)
+        .then(() => {
+            res.redirect("/thanks");
+        })
+        .catch((err) => console.log("Error", err));
 });
 
 app.get("/thanks", (req, res) => {

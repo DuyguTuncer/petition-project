@@ -29,7 +29,7 @@ $("#canvas").on("mousedown", function (e) {
             $(document).off("mousemove");
             $(document).off("mouseup");
             console.log("log if mousedraw is off");
-            $("#canvas").val(canvas.toDataURL());
+            $("#hiddenForCanvas").val(canvas.toDataURL());
         });
     }
 });
