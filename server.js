@@ -17,17 +17,22 @@ app.use(
 
 app.use(express.static("./public"));
 
+// app.use((req, res, next) => {
+//     console.log("middleware, middleware middle in the waaay");
+//     if (!req.cookies.authenticated && req.url != "/") {
+//         res.redirect("/cookies");
+//     } else {
+//         console.log("req.url:", req.url);
+//         next();
+//     }
+// });
+
 app.get("/", (req, res) => {
     console.log("Get request happened!");
     res.render("welcome", {
         layout: "main",
     });
 });
-
-// app.post("/", (req, res) => {
-//     console.log("User submited the form.");
-//     res.redirect("/thanks");
-// });
 
 app.post("/", (req, res) => {
     console.log(req.body);
@@ -43,16 +48,29 @@ app.post("/", (req, res) => {
 
 app.get("/thanks", (req, res) => {
     console.log("Get request happened to the thanks page!");
-    res.render("thanks", {
-        layout: "main",
-    });
+    db.getInfo()
+        .then(({ rows }) => {
+            // let numberOfSigners = rows.length;
+            res.render("thanks", {
+                layout: "main",
+                numberOfSigners: rows.length
+            });
+        })
+        .catch((err) => console.log("Error", err));
 });
-
 
 app.get("/signers", (req, res) => {
     db.getInfo()
         .then(({ rows }) => {
             console.log("data from db: ", rows);
+            console.log("id: ", rows[0].id);
+            console.log("first ", rows[0].first);
+            let numberOfSigners = rows.length;
+            res.render("signers", {
+                layout: "main",
+                arrayOfResults: rows,
+                numberOfSigners: rows.length,
+            });
         })
         .catch((err) => console.log("Error", err));
 });
