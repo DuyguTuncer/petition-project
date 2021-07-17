@@ -1,9 +1,51 @@
 * {
-    background-color: mediumaquamarine;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0;
+    font-family: "Times New Roman", Times, serif;
+}
+
+header {
+    text-align: center;
 }
 
 #canvas {
     top: 80px;
     left: 100px;
     background-color: white;
+    border: 2px dotted #CCCCCC;
+    border-radius: 15px;
+    cursor: crosshair;  
 }
+
+body {
+    background-color: mediumaquamarine;
+    height: 700px;
+}
+
+.projects {
+    position: relative;
+    text-align: center;
+    height: 600px;
+
+}
+
+.inner-projects {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.input {
+    text-align: center;
+}
+
+#thanks {
+    text-align: center;
+}
+
+h1, h2 {
+    top: 30%;
+}
+

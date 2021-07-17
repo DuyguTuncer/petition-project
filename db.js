@@ -1,18 +1,14 @@
 const spicedPg = require("spiced-pg");
-const db = spicedPg("postgres:postgres:postgres@localhost:5432/geography"); // change the geography to the
-// petition that you have named
+const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition"); 
 
-module.exports.getCities = () => {
-    return db.query(`SELECT * FROM cities`);
+module.exports.getInfo = () => {
+    return db.query(`SELECT * FROM signatures`);
 };
 
-module.exports.addCity = (city, country) => {
-    // Injection check it out!
-    // when you have multiple lines of codes
-    // make sure to use the template strings
+module.exports.addInfo = (first, last, signature) => {
     return db.query(
-        `INSERT INTO cities (city, country)
-        VALUES ($1, $2)`,
-        [city, country]
+        `INSERT INTO signatures (first, last, signature)
+        VALUES ($1, $2, $3)`,
+        [first, last, signature]
     );
-};
+};  
