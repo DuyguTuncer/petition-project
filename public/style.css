@@ -49,3 +49,13 @@ h1, h2 {
     top: 30%;
 }
 
+#signaturePic {
+    height: 200px;;
+    width: 400px;
+
+}
+
+h5 {
+    color: red;
+}
+
