@@ -15,7 +15,6 @@ app.use(
 
 app.use(express.static("./public"));
 
-
 app.use(
     cookieSession({
         secret: `I'm always hungry for cookies.`,
@@ -28,7 +27,6 @@ app.use(function (req, res, next) {
     res.set("x-frame-options", "deny");
     next();
 });
-
 
 app.get("/", (req, res) => {
     console.log("Get request happened!");
@@ -49,7 +47,6 @@ app.post("/", (req, res) => {
 
     db.addInfo(req.body.first, req.body.last, req.body.canvas)
         .then((results) => {
-            // req.session.sigId = results.rows[0].id;
             req.session.sigId = results.rows[0].id;
             console.log("results.rows[0].id", results.rows[0].id);
             res.redirect("/thanks");
@@ -74,9 +71,7 @@ app.get("/thanks", (req, res) => {
 app.get("/signers", (req, res) => {
     db.getInfo()
         .then(({ rows }) => {
-            console.log("data from db: ", rows);
-            // console.log("id: ", rows[0].id);
-            // let numberOfSigners = rows.length;
+            // console.log("data from db: ", rows);
             res.render("signers", {
                 layout: "main",
                 arrayOfResults: rows,
