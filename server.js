@@ -3,6 +3,7 @@ const app = express();
 const db = require("./db");
 const hb = require("express-handlebars");
 const cookieSession = require("cookie-session");
+const bcrypt = require("./bcrypt");
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
@@ -41,7 +42,7 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    console.log("req.body in /register -post request", req.body);
+    // console.log("req.body in /register -post request", req.body);
     if (
         req.body.first == false ||
         req.body.last == false ||
@@ -53,20 +54,30 @@ app.post("/register", (req, res) => {
             showErrorMessage: true,
         });
     }
-
-    db.addInfo(
-        req.body.first,
-        req.body.last,
-        req.body.emailAddress,
-        req.body.password
-    )
-        .then((results) => {
-            req.session.userId = results.rows[0].id;
-            console.log("results.rows[0].id - userId", results.rows[0].id);
-            console.log("req.session: ", req.session);
-            res.redirect("/welcome");
+    bcrypt
+        .hash(req.body.password)
+        .then((hashedPassword) => {
+            // console.log("hashedPassword", hashedPassword);
+            return db
+                .addInfo(
+                    req.body.first,
+                    req.body.last,
+                    req.body.emailAddress,
+                    hashedPassword
+                )
+                .then((results) => {
+                    req.session.userId = results.rows[0].id;
+                    req.session.first = req.body.first;
+                    req.session.last = req.body.last;
+                    // console.log("results.rows[0].id - userId", results.rows[0].id);
+                    // console.log("req.session: ", req.session);
+                    res.redirect("/welcome");
+                })
+                .catch((err) =>
+                    console.log("Error in post request for register", err)
+                );
         })
-        .catch((err) => console.log("Error in post request for register", err));
+        .catch((err) => console.log("Error in hashingy", err));
 });
 
 app.get("/welcome", (req, res) => {
@@ -79,13 +90,6 @@ app.get("/welcome", (req, res) => {
 app.post("/welcome", (req, res) => {
     // console.log(req.body);
     // console.log(req.body.canvas);
-    // if (req.body.canvas == false) {
-    //     res.render("welcome", {
-    //         layout: "main",
-    //         showErrorMessage: true,
-    //     });
-    // }
-    // console.log("req.body.canvas", req.body.canvas);
     db.addSignatureInfo(req.body.canvas, req.session.userId)
         .then((results) => {
             req.session.sigId = results.rows[0].id;
@@ -111,7 +115,32 @@ app.post("/login", (req, res) => {
             showErrorMessage: true,
         });
     }
-    // write a function to find and compare the info
+    db.findEmail(req.body.emailAddress)
+        .then(({ rows }) => {
+            console.log("rows:", rows);
+            // rows[0].hashed_password;
+            bcrypt
+                .compare(req.body.password, rows[0].hashed_password)
+                .then((check) => {
+                    console.log("check", check);
+                    if (!check) {
+                        res.render("login", {
+                            layout: "main",
+                        });
+                    } else {
+                        req.session.userId = rows[0].id;
+                        res.render("welcome", {
+                            layout: "main",
+                        });
+                    }
+                })
+                .catch((err) =>
+                    console.log("Error when comparing bcrypt", err)
+                );
+        })
+        .catch((err) => console.log("Error when finding email", err));
+
+    // findEmail() broke the process of redirecting from welcome page to the signers page, will be fixed tomorrow.
 });
 
 app.get("/thanks", (req, res) => {
@@ -125,7 +154,9 @@ app.get("/thanks", (req, res) => {
                 signaturePic: rows[rows.length - 1].signature,
             });
         })
-        .catch((err) => console.log("Error", err));
+        .catch((err) =>
+            console.log("Error for get request in thanks page", err)
+        );
 });
 
 app.get("/signers", (req, res) => {

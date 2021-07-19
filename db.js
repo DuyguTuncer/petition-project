@@ -20,3 +20,11 @@ module.exports.addSignatureInfo = (signature, userId) => {
 module.exports.getInfo = () => {
     return db.query(`SELECT * FROM users`);
 };
+
+module.exports.findEmail = (emailAddress) => {
+    return db.query(
+        `SELECT * FROM users
+         WHERE email_address = $1`,
+        [emailAddress]
+    );
+};
