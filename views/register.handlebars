@@ -1,0 +1,16 @@
+{{>errorInInput incompleteInfo=showErrorMessage}}
+<form method="POST">
+            <div class="registration">
+                <label> First Name <input type="text" name="first" id="firstname">  </label>
+                <label> Last Name <input type="text" name="last" id="lastname"> </label>
+                <label> Email address <input type="email" name="emailAddress" id="email-adress">  </label>
+                <label> Password <input type="password" name="password" id="password"> </label>
+            </div>
+               <br>
+
+             <div class="button">
+                <button type="submit">Sign Up</button>
+            </div>
+</form>
+
+<h4> If you are already a member, please <a href="/login">log in</a></h4>
