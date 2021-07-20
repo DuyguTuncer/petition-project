@@ -1,0 +1,11 @@
+  <h1>Signers from {{city}} </h1>
+    <ul>
+        {{#arrayOfResults}}
+            <li>{{first}}  
+                {{last}}
+                ({{#if age}} {{age}} {{/if}},
+            </li>
+        {{/arrayOfResults}}
+    </ul>
+
+    {{!-- Improve this part, check req.param in server.js --}}

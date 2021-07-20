@@ -28,3 +28,30 @@ module.exports.findEmail = (emailAddress) => {
         [emailAddress]
     );
 };
+
+module.exports.addProfileInfo = (userId, age, city, homepage) => {
+    return db.query(
+        `INSERT INTO profiles (user_id, age, city, homepage)
+        VALUES ($1, $2, $3, $4) RETURNING id`,
+        [userId, age, city, homepage]
+    );
+};
+
+// module.exports.mergeSignature = () => {
+//     return db.query(
+//         `SELECT users.*, signatures.signature
+//         FROM users
+//         FULL JOIN signatures ON users.id=signatures.user_id`,
+//     );
+// };
+
+module.exports.selectSigners = () => {
+    return db.query(
+        `SELECT users.first, users.last, signatures.signature, profiles.age, profiles.city, profiles.homepage
+            FROM users
+            INNER JOIN signatures ON users.id=signatures.user_id
+            LEFT JOIN profiles ON users.id=profiles.user_id`
+    );
+};
+
+

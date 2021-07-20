@@ -2,7 +2,16 @@
     <h1>See everyone who supports my amazing journey!</h1>
     {{#arrayOfResults}}
         <li>
-            {{first}} {{last}}
+          {{#if homepage}}<a href="{{homepage}}">{{/if}}
+                    {{first}}
+                    {{last}}
+            {{#if homepage}}</a>{{/if}}
+
+            {{#if age}}
+                {{age}}
+            {{/if}}
+
+            {{#if city}}<a href="/signers/{{city}}">{{city}}</a>{{/if}}
         </li>
     {{/arrayOfResults}}
 </div>

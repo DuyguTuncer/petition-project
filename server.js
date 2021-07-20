@@ -1,3 +1,5 @@
+// ---------------SETUP--------------------
+
 const express = require("express");
 const app = express();
 const db = require("./db");
@@ -7,6 +9,8 @@ const bcrypt = require("./bcrypt");
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
+
+// ---------------MIDDLEWARES--------------------
 
 app.use(
     express.urlencoded({
@@ -29,10 +33,14 @@ app.use(function (req, res, next) {
     next();
 });
 
+// ---------------HOME PAGE--------------------
+
 app.get("/", (req, res) => {
     console.log("Get request happened!");
     res.redirect("/register");
 });
+
+// ---------------REGISTER--------------------
 
 app.get("/register", (req, res) => {
     console.log("Get request happened to the register page!");
@@ -42,7 +50,7 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    // console.log("req.body in /register -post request", req.body);
+    console.log("req.body in /register -post request", req.body);
     if (
         req.body.first == false ||
         req.body.last == false ||
@@ -69,9 +77,12 @@ app.post("/register", (req, res) => {
                     req.session.userId = results.rows[0].id;
                     req.session.first = req.body.first;
                     req.session.last = req.body.last;
-                    // console.log("results.rows[0].id - userId", results.rows[0].id);
+                    console.log(
+                        "results.rows[0].id - userId",
+                        results.rows[0].id
+                    );
                     // console.log("req.session: ", req.session);
-                    res.redirect("/welcome");
+                    res.redirect("/profile");
                 })
                 .catch((err) =>
                     console.log("Error in post request for register", err)
@@ -80,25 +91,7 @@ app.post("/register", (req, res) => {
         .catch((err) => console.log("Error in hashingy", err));
 });
 
-app.get("/welcome", (req, res) => {
-    console.log("Get request happened to the welcome page!");
-    res.render("welcome", {
-        layout: "main",
-    });
-});
-
-app.post("/welcome", (req, res) => {
-    // console.log(req.body);
-    // console.log(req.body.canvas);
-    db.addSignatureInfo(req.body.canvas, req.session.userId)
-        .then((results) => {
-            req.session.sigId = results.rows[0].id;
-            console.log("req.body.sigId", req.body.sigId);
-            console.log("results.rows[0].id", results.rows[0].id);
-            res.redirect("/thanks");
-        })
-        .catch((err) => console.log("Error", err));
-});
+// ---------------LOGIN--------------------
 
 app.get("/login", (req, res) => {
     console.log("Get request happened to the login page!");
@@ -129,7 +122,7 @@ app.post("/login", (req, res) => {
                         });
                     } else {
                         req.session.userId = rows[0].id;
-                        res.render("welcome", {
+                        res.render("profile", {
                             layout: "main",
                         });
                     }
@@ -140,18 +133,73 @@ app.post("/login", (req, res) => {
         })
         .catch((err) => console.log("Error when finding email", err));
 
-    // findEmail() broke the process of redirecting from welcome page to the signers page, will be fixed tomorrow.
+    // findEmail() still problematic, when jumping from the profile page to the welcome page.
 });
+
+// ---------------PROFILE-------------------
+
+app.get("/profile", (req, res) => {
+    console.log("Get request happened to the profile page!");
+    res.render("profile", {
+        layout: "main",
+    });
+});
+
+app.post("/profile", (req, res) => {
+    console.log("req.body in /profile -post request", req.body);
+    db.addProfileInfo(
+        req.session.userId,
+        req.body.age,
+        req.body.city,
+        req.body.homepage
+    )
+        .then(() => {
+            res.redirect("/welcome");
+        })
+        .catch((err) => console.log("Error in adding profile info", err));
+});
+
+// ---------------WELCOME--------------------
+
+app.get("/welcome", (req, res) => {
+    console.log("Get request happened to the welcome page!");
+    res.render("welcome", {
+        layout: "main",
+    });
+});
+
+app.post("/welcome", (req, res) => {
+    // console.log(req.body);
+    // console.log(req.body.canvas);
+    db.addSignatureInfo(req.body.canvas, req.session.userId)
+        .then((results) => {
+            req.session.sigId = results.rows[0].id;
+            // req.session.sigId = results.rows[0].id;
+            // req.session.sigId = req.session.userId;
+            console.log("req.body.sigId :", req.body.sigId);
+            console.log("results.rows[0].id", results.rows[0].id);
+            res.redirect("/thanks");
+        })
+        .catch((err) => console.log("Error", err));
+});
+
+// ---------------THANKS--------------------
 
 app.get("/thanks", (req, res) => {
     console.log("Get request happened to the thanks page!");
-    db.getInfo()
+    db.selectSigners()
         .then(({ rows }) => {
             // let numberOfSigners = rows.length;
+            console.log("rows:", rows);
+            console.log(
+                "rows[rows.length - 1].signature",
+                rows[rows.length - 1].signature
+            );
             res.render("thanks", {
                 layout: "main",
                 numberOfSigners: rows.length,
                 signaturePic: rows[rows.length - 1].signature,
+                // Improve this practice with a query. It works but not sustainable.
             });
         })
         .catch((err) =>
@@ -159,8 +207,10 @@ app.get("/thanks", (req, res) => {
         );
 });
 
+// ---------------SIGNERS--------------------
+
 app.get("/signers", (req, res) => {
-    db.getInfo()
+    db.selectSigners()
         .then(({ rows }) => {
             // console.log("data from db: ", rows);
             res.render("signers", {
@@ -170,6 +220,19 @@ app.get("/signers", (req, res) => {
         })
         .catch((err) => console.log("Error", err));
 });
+
+// ---------------SIGNERSCITY--------------------
+
+app.get("/signers/:city", (req, res) => {
+    console.log("Get request happened to the /signers/:city!");
+    console.log("req.params: ", req.params);
+    res.render("signersCity", {
+        layout: "main",
+    });
+}); 
+// Check req.param
+
+// ---------------LOGOUT--------------------
 
 app.get("/logout", (req, res) => {
     console.log("get request happened to logout");
