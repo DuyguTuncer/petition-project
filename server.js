@@ -224,12 +224,17 @@ app.get("/signers", (req, res) => {
 // ---------------SIGNERSCITY--------------------
 
 app.get("/signers/:city", (req, res) => {
-    console.log("Get request happened to the /signers/:city!");
-    console.log("req.params: ", req.params);
-    res.render("signersCity", {
-        layout: "main",
-    });
-}); 
+    console.log("req.params.city", req.params.city);
+    db.selectSignersByCity(req.params.city)
+        .then(({ rows }) => {
+            console.log("rows", rows);
+            res.render("signersCity", {
+                layout: "main",
+                arrayOfResults: rows,
+            });
+        })
+        .catch((err) => console.log("Error in /signers/:city", err));
+});
 // Check req.param
 
 // ---------------LOGOUT--------------------

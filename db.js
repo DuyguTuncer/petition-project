@@ -54,4 +54,12 @@ module.exports.selectSigners = () => {
     );
 };
 
-
+module.exports.selectSignersByCity = (city) => {
+    return db.query(
+        `SELECT users.first, users.last, profiles.age, profiles.city, profiles.homepage
+            FROM users
+            FULL JOIN profiles ON users.id=profiles.user_id
+            WHERE profiles.city = $1`,
+        [city]
+    );
+};
