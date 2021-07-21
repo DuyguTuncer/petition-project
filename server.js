@@ -10,6 +10,15 @@ const bcrypt = require("./bcrypt");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
+if (process.env.NODE_ENV == "production") {
+    app.use((req, res, next) => {
+        if (req.headers["x-forwarded-proto"].startsWith("https")) {
+            return next();
+        }
+        res.redirect(`https://${req.hostname}${req.url}`);
+    });
+}
+
 // ---------------MIDDLEWARES--------------------
 
 app.use(
@@ -231,6 +240,7 @@ app.get("/signers/:city", (req, res) => {
             res.render("signersCity", {
                 layout: "main",
                 arrayOfResults: rows,
+                signersCity: req.params.city,
             });
         })
         .catch((err) => console.log("Error in /signers/:city", err));

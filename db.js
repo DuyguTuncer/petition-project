@@ -5,7 +5,6 @@ const db = spicedPg(
 );
 
 
-
 module.exports.addInfo = (first, last, emailAddress, password) => {
     return db.query(
         `INSERT INTO users (first, last, email_address, hashed_password)

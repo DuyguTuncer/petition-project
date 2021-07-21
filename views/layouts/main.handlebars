@@ -4,7 +4,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Petition</title>
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="/style.css" />
     </head>
     <body>
         <header>
@@ -18,3 +18,10 @@
  {{!-- <footer>Spiced Education - Duygu Tuncer 2021</footer> --}}
     </body>
 </html>
+{{!-- 
+Hey Duygu! Your layout is linking to styles.css like so:
+<link rel="stylesheet" href="style.css" />
+By default  this will be a relative path, so on the root route it will look 
+for /styles.css but on say the /profile page it will look for /profile/styles.css
+In your case it sounds like the browser is looking for /signers/styles.css , 
+but your dynamic /signers/:city route interprets this as being the "styles.css"  city. --}}
