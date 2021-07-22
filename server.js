@@ -42,6 +42,17 @@ app.use(function (req, res, next) {
     next();
 });
 
+// app.use((req,res,next) => {
+//     console.log("customize middleware is running");
+//     if (req.session.sigId && req.url == "/welcome") {
+//         res.redirect("/thanks");
+//     } else {
+//         next;
+//     }
+// });
+
+// Work on middleware to redirect registered users not profile but thanks page when they log in.
+
 // ---------------HOME PAGE--------------------
 
 app.get("/", (req, res) => {
@@ -143,6 +154,7 @@ app.post("/login", (req, res) => {
         .catch((err) => console.log("Error when finding email", err));
 
     // findEmail() still problematic, when jumping from the profile page to the welcome page.
+    // will be handleded with middleware above.
 });
 
 // ---------------PROFILE-------------------
@@ -199,7 +211,7 @@ app.get("/thanks", (req, res) => {
     db.selectSigners()
         .then(({ rows }) => {
             // let numberOfSigners = rows.length;
-            console.log("rows:", rows);
+            // console.log("rows:", rows);
             console.log(
                 "rows[rows.length - 1].signature",
                 rows[rows.length - 1].signature
@@ -215,6 +227,60 @@ app.get("/thanks", (req, res) => {
             console.log("Error for get request in thanks page", err)
         );
 });
+
+app.post("/thanks", (req, res) => {
+    db.deleteSignature(req.session.user).then(() => {
+        // console.log("req.session.userId:", req.session.userId);
+        // console.log("req.session.sigId:", req.session.sigId);
+        req.session.sigId = null;
+        res.redirect("/welcome");
+    });
+});
+
+// ---------------EDIT--------------------
+
+app.get("/edit", (req, res) => {
+    console.log("Get request happened to the EDIT page!");
+    db.renderInfo(req.session.userId)
+        .then(({ rows }) => {
+            console.log("rows in EDIT", rows);
+            res.render("edit", {
+                layout: "main",
+                arrayOfResults: rows
+            });
+        })
+        .catch((err) => console.log("Error for get request in EDIT page", err));
+});
+
+app.post("/edit", (req, res) => {
+    if (!req.body.password === "") {
+        bcrypt.hash(req.body.password).then((hashedPassword) => {
+            console.log("hashedPassword", hashedPassword);
+            return db
+                .editUserInfoWithPassword(
+                    req.body.first,
+                    req.body.last,
+                    req.body.emailAddress,
+                    hashedPassword
+                )
+                .then(() => {
+                    db.editProfileWithPassword(
+                        req.body.age,
+                        req.body.city,
+                        req.body.homepage
+                    );
+                    console.log("req.session: ", req.body);
+                    res.redirect("/thanks");
+                })
+                .catch((err) =>
+                    console.log("Error in post request for register", err)
+                );
+        });
+        // Check db!!
+        // check logic, the way that how you chain the promises. Is that correct?
+    }
+});
+
 
 // ---------------SIGNERS--------------------
 
@@ -236,7 +302,7 @@ app.get("/signers/:city", (req, res) => {
     console.log("req.params.city", req.params.city);
     db.selectSignersByCity(req.params.city)
         .then(({ rows }) => {
-            console.log("rows", rows);
+            // console.log("rows", rows);
             res.render("signersCity", {
                 layout: "main",
                 arrayOfResults: rows,
@@ -258,4 +324,3 @@ app.get("/logout", (req, res) => {
 app.listen(process.env.PORT || 8080, () =>
     console.log("I am listening the post 8080 for the petition")
 );
-

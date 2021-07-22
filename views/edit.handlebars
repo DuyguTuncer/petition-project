@@ -1,0 +1,18 @@
+<form method="POST">
+            <div class="edit">
+                 {{#arrayOfResults}}
+                <label> First Name <input value="{{first}}" type="text" name="first" id="firstname"> </label>
+                <label> Last Name <input value="{{last}}" type="text" name="last" id="lastname"> </label>
+                <label> Email address <input value="{{emailAddress}}" type="email" name="emailAddress" id="email-adress">  </label>
+                <label> Password <input value="{{password}}" type="password" name="password" id="password"> </label>
+                <label> Age <input value="{{age}}" type="number" name="age" min="15" max="110" id="age">  </label>
+                <label> City <input value="{{city}}" type="text" name="city" id="city"> </label>
+                <label> Homepage <input value="{{homepage}}" type="url" name="homepage" id="homepage">  </label>
+                 {{/arrayOfResults}}
+            </div>
+               <br>
+
+             <div class="button">
+                <button type="submit">Update</button>
+            </div>
+</form>

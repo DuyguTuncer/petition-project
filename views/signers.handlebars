@@ -3,13 +3,10 @@
     {{#arrayOfResults}}
         <li>
           {{#if homepage}}<a href="{{homepage}}">{{/if}}
-                    {{first}}
-                    {{last}}
+                    {{first}} {{last}}
             {{#if homepage}}</a>{{/if}}
 
-            {{#if age}}
-                {{age}}
-            {{/if}}
+            {{#if age}} {{age}} {{/if}}
 
             {{#if city}}<a href="/signers/{{city}}">{{city}}</a>{{/if}}
         </li>

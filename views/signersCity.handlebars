@@ -1,11 +1,9 @@
-  <h1>Signers from {{signersCity}} </h1>
-    <ul>
-        {{#arrayOfResults}}
-            <li>{{first}}  
-                {{last}}
-                ({{#if age}} {{age}} {{/if}},
-            </li>
-        {{/arrayOfResults}}
-    </ul>
-
-    {{!-- Improve this part, check req.param in server.js --}}
+<h1>Signers from {{signersCity}} </h1>
+<ul>
+    {{#arrayOfResults}}
+        <li>{{first}}
+            {{last}}
+            {{#if age}} {{age}} {{/if}},
+        </li>
+    {{/arrayOfResults}}
+</ul>
