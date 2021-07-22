@@ -21,6 +21,13 @@ if (process.env.NODE_ENV == "production") {
 
 // ---------------MIDDLEWARES--------------------
 
+// const {
+//     requireLoggedOutUser,
+//     requireLoggedInUser,
+//     requireNoSignature,
+//     requireSignature,
+// } = require("./middleware");
+
 app.use(
     express.urlencoded({
         extended: false,
@@ -41,17 +48,6 @@ app.use(function (req, res, next) {
     res.set("x-frame-options", "deny");
     next();
 });
-
-// app.use((req,res,next) => {
-//     console.log("customize middleware is running");
-//     if (req.session.sigId && req.url == "/welcome") {
-//         res.redirect("/thanks");
-//     } else {
-//         next;
-//     }
-// });
-
-// Work on middleware to redirect registered users not profile but thanks page when they log in.
 
 // ---------------HOME PAGE--------------------
 
@@ -210,8 +206,9 @@ app.get("/thanks", (req, res) => {
     console.log("Get request happened to the thanks page!");
     db.selectSigners()
         .then(({ rows }) => {
+            console.log("req.session :", req.session);
             // let numberOfSigners = rows.length;
-            // console.log("rows:", rows);
+            console.log("rows:", rows);
             console.log(
                 "rows[rows.length - 1].signature",
                 rows[rows.length - 1].signature
@@ -246,41 +243,58 @@ app.get("/edit", (req, res) => {
             console.log("rows in EDIT", rows);
             res.render("edit", {
                 layout: "main",
-                arrayOfResults: rows
+                arrayOfResults: rows,
             });
         })
         .catch((err) => console.log("Error for get request in EDIT page", err));
 });
 
 app.post("/edit", (req, res) => {
-    if (!req.body.password === "") {
+    if (!req.body.password == "") {
         bcrypt.hash(req.body.password).then((hashedPassword) => {
             console.log("hashedPassword", hashedPassword);
-            return db
-                .editUserInfoWithPassword(
-                    req.body.first,
-                    req.body.last,
-                    req.body.emailAddress,
-                    hashedPassword
-                )
+            console.log("req.body in edit post", req.body);
+            db.editUserInfoWithPassword(
+                req.session.userId,
+                req.body.first,
+                req.body.last,
+                req.body.emailAddress,
+                hashedPassword
+            )
                 .then(() => {
-                    db.editProfileWithPassword(
+                    db.editProfile(
+                        req.session.userId,
                         req.body.age,
                         req.body.city,
                         req.body.homepage
                     );
-                    console.log("req.session: ", req.body);
                     res.redirect("/thanks");
                 })
                 .catch((err) =>
-                    console.log("Error in post request for register", err)
+                    console.log("Error in POST request for Edit with password", err)
                 );
         });
-        // Check db!!
-        // check logic, the way that how you chain the promises. Is that correct?
+    } else {
+        db.editUserInfoWithoutPassword(
+            req.session.userId,
+            req.body.first,
+            req.body.last,
+            req.body.emailAddress,
+        )
+            .then(() => {
+                db.editProfile(
+                    req.session.userId,
+                    req.body.age,
+                    req.body.city,
+                    req.body.homepage
+                );
+                res.redirect("/thanks");
+            })
+            .catch((err) =>
+                console.log("Error in POST request for Edit without password", err)
+            );
     }
 });
-
 
 // ---------------SIGNERS--------------------
 

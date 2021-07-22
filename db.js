@@ -57,6 +57,13 @@ module.exports.selectSigners = () => {
     );
 };
 
+// module.exports.selectSigners = () => {
+//     return db.query(
+//         `SELECT COUNT(*)
+//         FROM signatures`
+//     );
+// };
+
 module.exports.selectSignersByCity = (city) => {
     return db.query(
         `SELECT users.first, users.last, profiles.age, profiles.city, profiles.homepage
@@ -85,7 +92,7 @@ module.exports.deleteSignature = (userId) => {
     return db.query(`DELETE FROM signatures WHERE user_id = $1`, [userId]);
 };
 
-//-------------------UPSERT the the info if password is NOT provided--------------------
+//-------------------UPSERT the info if password is NOT provided--------------------
 
 module.exports.editUserInfoWithoutPassword = (
     userId,
@@ -94,51 +101,40 @@ module.exports.editUserInfoWithoutPassword = (
     emailAddress
 ) => {
     return db.query(
-        `INSERT INTO profiles (user_id, age, city, homepage)
-    VALUES ($1, $2, $3, $4)
-    ON CONFLICT (user_id)
-    DO UPDATE SET age = $2, city = $3, homepage = $4`, [
-            (userId, first, last, emailAddress)
-        ]
-    );
-};
-module.exports.editProfileWithoutPassword = (userId, age, city, homepage) => {
-    return db.query(
-        `INSERT INTO profiles (user_id, age, city, homepage)
-    VALUES ($1, $2, $3, $4)
-    ON CONFLICT (user_id)
-    DO UPDATE SET age = $2, city = $3, homepage = $4`, [
-            (userId, age, city, homepage)
-        ]
+        `UPDATE users
+        SET first =$2, last = $3, email_address =$4
+        WHERE id =$1`,
+        [userId, first, last, emailAddress]
     );
 };
 
-//-------------------UPSERT the the info if password is provided--------------------
+//-------------------UPSERT the info if password is provided--------------------
 
 module.exports.editUserInfoWithPassword = (
     userId,
     first,
     last,
     emailAddress,
-    password
+    hashedPassword
 ) => {
     return db.query(
-        `INSERT INTO profiles (user_id, age, city, homepage)
-    VALUES ($1, $2, $3, $4)
-    ON CONFLICT (user_id)
-    DO UPDATE SET age = $2, city = $3, homepage = $4`,
-        [(userId, first, last, emailAddress, password)]
+        `INSERT INTO users (id, first, last, email_address, hashed_password)
+    VALUES ($1, $2, $3, $4, $5)
+    ON CONFLICT (id)
+    DO UPDATE SET first = $2, last = $3, email_address = $4, hashed_password = $5 WHERE users.id = $1`,
+        [userId, first, last, emailAddress, hashedPassword]
     );
 };
 
-// Do I need the last one?
+//-------------------UPSERT profile--------------------
 
-module.exports.editProfileWithPassword = (userId, age, city, homepage) => {
+module.exports.editProfile = (userId, age, city, homepage) => {
     return db.query(
         `INSERT INTO profiles (user_id, age, city, homepage)
     VALUES ($1, $2, $3, $4)
     ON CONFLICT (user_id)
-    DO UPDATE SET age = $2, city = $3, homepage = $4`,
-        [(userId, age, city, homepage)]
+    DO UPDATE SET age = $2, city = $3, homepage = $4 WHERE user_id = $1`,
+        [userId, age, city, homepage]
     );
 };
+
