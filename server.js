@@ -138,9 +138,7 @@ app.post("/login", (req, res) => {
                         });
                     } else {
                         req.session.userId = rows[0].id;
-                        res.render("profile", {
-                            layout: "main",
-                        });
+                        res.redirect("/thanks");
                     }
                 })
                 .catch((err) =>
@@ -148,9 +146,6 @@ app.post("/login", (req, res) => {
                 );
         })
         .catch((err) => console.log("Error when finding email", err));
-
-    // findEmail() still problematic, when jumping from the profile page to the welcome page.
-    // will be handleded with middleware above.
 });
 
 // ---------------PROFILE-------------------
@@ -191,8 +186,6 @@ app.post("/welcome", (req, res) => {
     db.addSignatureInfo(req.body.canvas, req.session.userId)
         .then((results) => {
             req.session.sigId = results.rows[0].id;
-            // req.session.sigId = results.rows[0].id;
-            // req.session.sigId = req.session.userId;
             console.log("req.body.sigId :", req.body.sigId);
             console.log("results.rows[0].id", results.rows[0].id);
             res.redirect("/thanks");
@@ -203,30 +196,41 @@ app.post("/welcome", (req, res) => {
 // ---------------THANKS--------------------
 
 app.get("/thanks", (req, res) => {
-    console.log("Get request happened to the thanks page!");
-    db.selectSigners()
-        .then(({ rows }) => {
-            console.log("req.session :", req.session);
-            // let numberOfSigners = rows.length;
-            console.log("rows:", rows);
-            console.log(
-                "rows[rows.length - 1].signature",
-                rows[rows.length - 1].signature
-            );
-            res.render("thanks", {
-                layout: "main",
-                numberOfSigners: rows.length,
-                signaturePic: rows[rows.length - 1].signature,
-                // Improve this practice with a query. It works but not sustainable.
-            });
+    console.log("req.session.userId", req.session.userId);
+    var signatureUrl = db
+        .getSignature(req.session.userId)
+        .then((result) => {
+            console.log("result.rows in thanks", result.rows);
+            return result.rows[0];
         })
-        .catch((err) =>
-            console.log("Error for get request in thanks page", err)
-        );
+        .catch((err) => {
+            console.log("Error in signatureUrl ", err);
+        });
+
+    var numberOfSignatures = db
+        .countSigners()
+        .then((result) => {
+            console.log("result.rows[0].count in thanks", result.rows[0].count);
+            return result.rows[0].count;
+        })
+        .catch((err) => {
+            console.log("Error in numberOfSignatures ", err);
+        });
+
+    Promise.all([signatureUrl, numberOfSignatures]).then((results) => {
+        console.log("results in thanks", results);
+        res.render("thanks", {
+            layout: "main",
+            numberOfSigners: results[1],
+            signaturePic: results[0].signature
+        });
+    });
 });
 
 app.post("/thanks", (req, res) => {
-    db.deleteSignature(req.session.user).then(() => {
+    db.deleteSignature(req.session.userId).then((result) => {
+        console.log("req.session.userId in post thanks", req.session.userId);
+        console.log("result in post thanks", result);
         // console.log("req.session.userId:", req.session.userId);
         // console.log("req.session.sigId:", req.session.sigId);
         req.session.sigId = null;
@@ -271,7 +275,10 @@ app.post("/edit", (req, res) => {
                     res.redirect("/thanks");
                 })
                 .catch((err) =>
-                    console.log("Error in POST request for Edit with password", err)
+                    console.log(
+                        "Error in POST request for Edit with password",
+                        err
+                    )
                 );
         });
     } else {
@@ -279,7 +286,7 @@ app.post("/edit", (req, res) => {
             req.session.userId,
             req.body.first,
             req.body.last,
-            req.body.emailAddress,
+            req.body.emailAddress
         )
             .then(() => {
                 db.editProfile(
@@ -291,7 +298,10 @@ app.post("/edit", (req, res) => {
                 res.redirect("/thanks");
             })
             .catch((err) =>
-                console.log("Error in POST request for Edit without password", err)
+                console.log(
+                    "Error in POST request for Edit without password",
+                    err
+                )
             );
     }
 });

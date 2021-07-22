@@ -57,12 +57,18 @@ module.exports.selectSigners = () => {
     );
 };
 
-// module.exports.selectSigners = () => {
-//     return db.query(
-//         `SELECT COUNT(*)
-//         FROM signatures`
-//     );
-// };
+module.exports.getSignature = (userId) => {
+    return db.query(`SELECT signature FROM signatures WHERE user_id = $1`, [
+        userId,
+    ]);
+};
+
+module.exports.countSigners = () => {
+    return db.query(
+        `SELECT COUNT(*)
+        FROM signatures`
+    );
+};
 
 module.exports.selectSignersByCity = (city) => {
     return db.query(
@@ -137,4 +143,3 @@ module.exports.editProfile = (userId, age, city, homepage) => {
         [userId, age, city, homepage]
     );
 };
-
