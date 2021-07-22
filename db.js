@@ -26,7 +26,9 @@ module.exports.getInfo = () => {
 
 module.exports.findEmail = (emailAddress) => {
     return db.query(
-        `SELECT * FROM users
+        `SELECT users.id, users.hashed_password, signatures.id AS signature_id
+         FROM users
+         LEFT JOIN signatures ON users.id=signatures.user_id
          WHERE email_address = $1`,
         [emailAddress]
     );
@@ -87,7 +89,7 @@ module.exports.renderInfo = (userId) => {
         `SELECT users.first, users.last, users.email_address, profiles.age, profiles.city, profiles.homepage
     FROM users
     LEFT JOIN profiles ON users.id=profiles.user_id
-    WHERE user_id = $1`,
+    WHERE users.id = $1`,
         [userId]
     );
 };
@@ -139,7 +141,7 @@ module.exports.editProfile = (userId, age, city, homepage) => {
         `INSERT INTO profiles (user_id, age, city, homepage)
     VALUES ($1, $2, $3, $4)
     ON CONFLICT (user_id)
-    DO UPDATE SET age = $2, city = $3, homepage = $4 WHERE user_id = $1`,
+    DO UPDATE SET age = $2, city = $3, homepage = $4 WHERE profiles.user_id = $1`,
         [userId, age, city, homepage]
     );
 };
