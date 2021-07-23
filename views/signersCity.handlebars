@@ -1,9 +1,17 @@
-<h1>Signers from {{signersCity}} </h1>
-<ul>
-    {{#arrayOfResults}}
-        <li>{{first}}
-            {{last}}
-            {{#if age}} {{age}} {{/if}},
-        </li>
-    {{/arrayOfResults}}
-</ul>
+<div class="signers-city-main">
+    <div class="signers-city-parent">
+        <h1>Signers from {{signersCity}} </h1>
+        
+            {{#arrayOfResults}}
+            <ul></ul>
+             {{#if homepage}}<a href="{{homepage}}">{{/if}}
+                <li>{{first}}
+                    {{last}}
+                    {{#if age}} {{age}} {{/if}},
+                </li>
+            {{#if homepage}}</a>{{/if}}
+            </ul>
+            {{/arrayOfResults}}
+       
+    </div>
+ </div>

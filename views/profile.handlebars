@@ -1,5 +1,6 @@
+<div class="profile-main">
 <form method="POST">
-    <div class="layout">
+    <div class="profile-parent">
         <label>
             Age
             <input
@@ -8,18 +9,19 @@
                 min="15"
                 max="110"
                 optional="true"
-                id="age"
+                id="profile-input"
             />
         </label>
-        <label> City <input type="text" name="city" id="city" /> </label>
+        <label> City <input type="text" name="city" id="profile-input" /> </label>
         <label>
             Homepage
-            <input type="url" name="homepage" id="homepage" />
+            <input type="url" name="homepage" id="profile-input" />
         </label>
-    </div>
     <br />
 
-    <div class="button">
-        <button type="submit">Continue</button>
+    <div>
+        <button type="submit" id="profile-button">Continue</button>
+    </div>
     </div>
 </form>
+</div>

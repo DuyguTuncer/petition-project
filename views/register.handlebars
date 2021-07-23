@@ -1,18 +1,43 @@
-{{>errorInInput incompleteInfo=showErrorMessage}}
+
 <div class="registration-parent">
+    {{>errorInInput incompleteInfo=showErrorMessage}}
+    <div id="text">
+    <div>
+        Time is running out! Every day, we find ourselves ckecking the clock wishing to have more hours in a day.
+    </div>
+     <div>
+        So, why not make a timesless petition to make our voice heard to the future generations, where all amazing 
+        <br>
+        theories about time will not only be hypotesis in mathematical equations but will be real! 
+        
+    </div>
+    </div>
+    <br>
+    
 <form method="POST">
-            <div class="registration">
-                <label> First Name <input type="text" name="first" id="firstname">  </label>
-                <label> Last Name <input type="text" name="last" id="lastname"> </label>
-                <label> Email address <input type="email" name="emailAddress" id="email-adress">  </label>
-                <label> Password <input type="password" name="password" id="password"> </label>
-            </div>
+            {{!-- <div class="registration"> --}}
+                <label> First Name <input type="text" name="first" id="inputfield">  </label>
+                <label> Last Name <input type="text" name="last" id="inputfield"> </label>
+                <label> Email address <input type="email" name="emailAddress" id="inputfield">  </label>
+                <label> Password <input type="password" name="password" id="inputfield"> </label>
+                <button id="submit-signup" type="submit">Sign Up</button>
+            {{!-- </div>
                <br>
 
              <div class="button">
                 <button type="submit">Sign Up</button>
-            </div>
+            </div> --}}
 </form>
-
+<br>
+<div>
 <h4> If you are already a member, please <a href="/login">log in</a></h4>
 </div>
+<br>
+<div>
+    <img id ="Melting-clock" src ="/Meltingclock.jpg" alt = "Melting-clock"/>
+</div>
+</div>
+
+
+
+

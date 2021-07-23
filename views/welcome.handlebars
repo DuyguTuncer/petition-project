@@ -1,19 +1,21 @@
 {{>errorInInput incompleteInfo=showErrorMessage}}
-<div class="projetcs">
-      <div class ="inner-projects">
+<div class="welcome-main">
+      <div class ="welcome-parent">
         <h1>
-       <h1> WELCOME TO THE PETITION PAGE! SEND ME TO SPACE!!!</h1>
+       <a> Only one step left, TIME to take action</a>
+       <br>
+      <br>
       {{>errorInInput incompleteInfo=showErrorMessage}}
       <div class="input">
          <form method="POST">
             <div id="canvasParent">
                     <input type="hidden" name="canvas" id="hiddenForCanvas">
-                    <canvas id="canvas" width="300" height="100"></canvas>
+                    <canvas id="canvas" width="500" height="200"></canvas>
                     <p>Sign here!</p>
             </div>
               <br>
-             <div class="button">
-                <button type="submit">Submit</button>
+             <div>
+                <button id="welcome-button" type="submit">Submit</button>
             </div>
         </form>
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

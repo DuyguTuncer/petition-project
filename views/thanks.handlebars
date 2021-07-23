@@ -1,15 +1,22 @@
- <div id="thanks">
+ <div class="thanks-main">
+     <div class="thanks-parent">
+         <br>
     <h1>
-        THANK YOU FOR SIGNING!
+        Thank you for signing!
     </h1>
+    <br>
 
     <img src="{{signaturePic}}" alt="signaturePic" id="signaturePic"/>
+    <br>
     <h2><a href="/signers">See all {{numberOfSigners}} signers!</a></h2>
+    <br>
     <h2><a href="/edit">Edit your profile!</a></h2>
+    <br>
      <form method="POST">
-    <div class="button">
-                <button type="submit">Delete your signature</button>
+    <div >
+                <button class="submit-delete" type="submit">Delete your signature</button>
             </div>
     </form>
+    </div>
 </div>
 

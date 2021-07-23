@@ -1,12 +1,21 @@
+<div class = "login">
 {{>errorInInput incompleteInfo=showErrorMessage}}
+<div>
+    <img id ="Melting-clock" src ="/Meltingclock.jpg" alt = "Melting-clock"/>
+</div>
+<br>
+<br>
+<br>
+<br>
 <form method="POST">
-            <div class="login">
+            <div class="login-child">
                 <label> Email address <input type="email" name="emailAddress" id="email-address">  </label>
                 <label> Password <input type="password" name="password" id="password"> </label>
             </div>
                <br>
 
-             <div class="button">
-                <button type="submit">Log in</button>
+             <div class="button-login">
+                <button type="submit" id="login-submit">Log in</button>
             </div>
 </form>
+</div>

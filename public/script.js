@@ -1,42 +1,31 @@
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-context.strokeStyle = "#000000";
+
 context.lineWidth = 5;
 context.lineJoin = "round";
+context.strokeStyle = "#000000";
 context.lineCap = "round";
+
 let isDrawing = false;
-let X = 0;
-let Y = 0;
+let x = 0;
+let y = 0;
 
-$("#canvas").on("mousedown", function (e) {
-    if (e.target === document.querySelector("#canvas")) {
-        console.log("log if mousedown");
-        if (!isDrawing) {
-            context.beginPath();
+function canvasSignature(event) {
+    if (!isDrawing) return;
+    console.log(event);
+    context.beginPath();
+    context.moveTo(x, y);
+    context.lineTo(event.offsetX, event.offsetY);
+    context.stroke();
+    [x, y] = [event.offsetX, event.offsetY];
+    $("#hiddenForCanvas").val(canvas.toDataURL());
+}
 
-            $(document).on("mousemove", function (e) {
-                console.log("log if mousedraw");
-                e.preventDefault();
-
-                context.moveTo(X, Y);
-                context.lineTo(e.offsetX, e.offsetY);
-                context.stroke();
-                X = e.offsetX;
-                Y = e.offsetY;
-            });
-        }
-        $(document).on("mouseup", function (e) {
-            $(document).off("mousemove");
-            $(document).off("mouseup");
-            console.log("log if mousedraw is off");
-            $("#hiddenForCanvas").val(canvas.toDataURL());
-        });
-    }
+canvas.addEventListener("mousedown", (event) => {
+    isDrawing = true;
+    [x, y] = [event.offsetX, event.offsetY];
 });
 
-var searchInput = $("input");
-
-searchInput.on("input", function (e) {
-    console.log("input handler was called");
-    var userInput = searchInput.val();
-});
+canvas.addEventListener("mousemove", canvasSignature);
+canvas.addEventListener("mouseup", () => (isDrawing = false ));
+canvas.addEventListener("mouseout", () => (isDrawing = false));

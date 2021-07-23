@@ -1,18 +1,41 @@
-<form method="POST">
-            <div class="edit">
-                 {{#arrayOfResults}}
-                <label> First Name <input value="{{first}}" type="text" name="first" id="firstname"> </label>
-                <label> Last Name <input value="{{last}}" type="text" name="last" id="lastname"> </label>
-                <label> Email address <input value="{{email_address}}" type="email" name="emailAddress" id="email-adress">  </label>
-                <label> Password <input value="{{password}}" type="password" name="password" id="password"> </label>
-                <label> Age <input value="{{age}}" type="number" name="age" min="15" max="110" id="age">  </label>
-                <label> City <input value="{{city}}" type="text" name="city" id="city"> </label>
-                <label> Homepage <input value="{{homepage}}" type="url" name="homepage" id="homepage">  </label>
-                 {{/arrayOfResults}}
-            </div>
-               <br>
+<div class="edit-main">
+   <div class="edit-parent">
+      <form method="POST">
+                     {{#arrayOfResults}}
+                     <div id="edit-input">
+                       <label> First Name <input value="{{first}}" type="text" name="first" id="edit-input"> </label>
+                     </div>
 
-             <div class="button">
-                <button type="submit">Update</button>
-            </div>
-</form>
+                      <div id="edit-input">
+                        <label> Last Name <input value="{{last}}" type="text" name="last" id="edit-input"> </label>
+                      </div>
+
+                     <div id="edit-input">
+                        <label> Email address <input value="{{email_address}}" type="email" name="emailAddress" id="edit-input">  </label>
+                     </div>
+
+                     <div id="edit-input">
+                       <label> Password <input value="{{password}}" type="password" name="password" id="edit-input"> </label>
+                     </div>
+
+                     <div id="edit-input">
+                       <label> Age <input value="{{age}}" type="number" name="age" min="15" max="110" id="edit-input">  </label>
+                     </div>
+
+                     <div id="edit-input">
+                       <label> City <input value="{{city}}" type="text" name="city" id="edit-input"> </label>
+                     </div>
+                     
+                     <div id="edit-input">
+                      <label> Homepage <input value="{{homepage}}" type="url" name="homepage" id="edit-input">  </label>
+                     </div>
+                     {{/arrayOfResults}}
+                     <br>
+                     <br>
+                     <br>
+                  {{!-- <div class="button"> --}}
+                     <button id = "edit-button" type="submit">Update</button>
+                  {{!-- </div> --}}
+      </form>
+   </div>
+</div>
