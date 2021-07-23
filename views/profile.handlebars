@@ -1,27 +1,32 @@
 <div class="profile-main">
-<form method="POST">
-    <div class="profile-parent">
-        <label>
-            Age
-            <input
-                type="number"
-                name="age"
-                min="15"
-                max="110"
-                optional="true"
-                id="profile-input"
-            />
-        </label>
-        <label> City <input type="text" name="city" id="profile-input" /> </label>
-        <label>
-            Homepage
-            <input type="url" name="homepage" id="profile-input" />
-        </label>
-    <br />
-
-    <div>
-        <button type="submit" id="profile-button">Continue</button>
+     <div class="profile-parent">
+            <form method="POST">
+                <div id="profile-div">
+                    <label>
+                        Age
+                        <input
+                            type="number"
+                            name="age"
+                            min="15"
+                            max="110"
+                            optional="true"
+                            id="profile-input"
+                        />
+                    </label>
+                </div>
+                <div id="profile-div">
+                    <label> City <input type="text" name="city" id="profile-input" /> </label>
+                </div>
+                <div id="profile-div">
+                    <label>
+                        Homepage
+                        <input type="url" name="homepage" id="profile-input" />
+                    </label>
+                </div>
+                    <br />
+                <div id="profile-div">
+                    <button type="submit" id="profile-button">Continue</button>
+                </div>
+            </form>
     </div>
-    </div>
-</form>
 </div>

@@ -79,6 +79,7 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
             layout: "main",
             showErrorMessage: true,
         });
+        return;
     }
     bcrypt
         .hash(req.body.password)
@@ -125,6 +126,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
             layout: "main",
             showErrorMessage: true,
         });
+        return;
     }
     db.findEmail(req.body.emailAddress)
         .then(({ rows }) => {
@@ -140,6 +142,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
                             showErrorMessage: true,
                         });
                     } else {
+                        console.log("hello", rows[0]);
                         req.session.userId = rows[0].id;
                         req.session.sigId = rows[0].signature_id;
                         res.redirect("/thanks");
