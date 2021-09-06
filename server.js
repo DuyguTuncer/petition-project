@@ -358,6 +358,10 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
 });
 
+app.get("*", (req, res) => {
+    res.send("404 - this page does not exist in your time, maybe in the future!");
+});
+
 app.listen(process.env.PORT || 8080, () =>
     console.log("I am listening the post 8080 for the petition")
 );
