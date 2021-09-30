@@ -2,7 +2,7 @@
 
 A Static web portal collect user information and invite users to sign a petition using a canvas HTML element. Once petition is signed by the user, they can see a list of other signers, and can sort them by location. Users can also submit a link of their personal websites, or their preferred media item.
 
-My petition subject was for having more than 24 hours a day, as all bootcamp students need to have more time during this exciting and hectic journey :)
+My petition subject was for having more than 24 hours a day, as time is genuinely valuable for bootcamp students especially during this exciting and hectic journey :)
 
 https://user-images.githubusercontent.com/83556443/135122649-f1964ff9-c947-44e4-a7ea-1c2be3ce4b96.mp4
 
