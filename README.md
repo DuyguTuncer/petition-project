@@ -1,6 +1,6 @@
 ## Petition Project
 
-#### A Static web portal collect user information and invite users to sign a petition using a canvas HTML element. Once petition is signed by the user, they can see a list of other signers, and can sort them by location. Users can also submit a link of their personal websites, or their preferred media item.
+#### A Static web portal collect user information and invite users to sign a petition using a canvas HTML element. Once petition is signed by the user, they can see a list of other signers, and can sort them by location. Users can also submit a link of their personal websites, or their preferred media item. 
 
 My petition subject was for having more than 24 hours a day, as time is genuinely valuable for bootcamp students especially during this exciting and hectic journey :)
 
